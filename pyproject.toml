@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "pulsepause"
+version = "1.0"
+description = "A desktop app for periodic stress and mindfulness check-ins leveraging computer vision to measure your heart rate wherever you are."
+authors = ["kloeffler95 <kevin.loeffler@colorado.edu>"]
+license = "GPL 3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
