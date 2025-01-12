@@ -4,9 +4,10 @@ import json
 import tkinter as tk
 import yarppg
 import cv2
-from PIL import Image
 import time
+import random
 import threading
+from PIL import Image
 
 logo = Image.open(os.path.join("assets", "PulsePause.png"))
 
@@ -14,8 +15,60 @@ rppg = yarppg.Rppg()
 
 disable_var = tk.BooleanVar()
 interval_var = tk.IntVar()
+athlete_var = tk.BooleanVar()
 
 FONT_COLOR = (0, 0, 0)
+
+mindfulness_exercises = [
+    {
+        "name": "Deep Breathing",
+        "description": "Take a deep breath in for 4 seconds, hold it for 4 seconds, and then exhale for 6 seconds. Repeat for 5 cycles."
+    },
+    {
+        "name": "Body Scan",
+        "description": "Close your eyes and slowly bring attention to different parts of your body, starting from your toes and working up to your head."
+    },
+    {
+        "name": "5-4-3-2-1 Grounding",
+        "description": "Identify 5 things you can see, 4 things you can feel, 3 things you can hear, 2 things you can smell, and 1 thing you can taste."
+    },
+    {
+        "name": "Gratitude Reflection",
+        "description": "Take 2 minutes to reflect on 3 things you’re grateful for and why they are meaningful to you."
+    },
+    {
+        "name": "Mindful Observation",
+        "description": "Choose an object nearby and focus on it for 1 minute. Observe its color, texture, shape, and any small details you’ve never noticed before."
+    }
+]
+
+def is_heart_rate_anomalous(heart_rate, age_group="adult"):
+    """
+    Checks if the heart rate is anomalously high for the specified age group.
+    
+    Parameters:
+        heart_rate (float): The measured heart rate in BPM.
+        age_group (str): The age group of the user ("child", "adult", "athlete").
+    
+    Returns:
+        bool: True if the heart rate is anomalous, False otherwise.
+        str: A message explaining the result.
+    """
+    thresholds = {
+        "adult": 100,
+        "athlete": 80
+    }
+    
+    if age_group not in thresholds:
+        return False, "Unknown age group. Cannot determine threshold."
+    
+    threshold = thresholds[age_group]
+    
+    if heart_rate > threshold:
+        return True, f"High heart rate detected! Measured: {heart_rate} BPM (Threshold: {threshold} BPM). It's time for a break."
+    else:
+        return False, f"Heart rate is normal: {heart_rate} BPM (Threshold: {threshold} BPM)."
+
 
 def _is_window_closed(name: str) -> bool:
     return cv2.getWindowProperty(name, cv2.WND_PROP_VISIBLE) < 1
@@ -25,10 +78,10 @@ def check_in(skip_permission=False):
     Perform a mindfulness check-in using the webcam to measure heart rate.
 
     Parameters:
-    skip_permission (bool): If True, skip the permission prompt for the check-in. Default is False.
+        skip_permission (bool): If True, skip the permission prompt for the check-in. Default is False.
 
     Returns:
-    int: Returns -1 if the camera could not be openedor the user skipped check-in, otherwise 0.
+        int: Returns -1 if the camera could not be opened or the user skipped check-in, otherwise 0.
     """
     if not disable_var.get():
         if not skip_permission:
@@ -44,6 +97,7 @@ def check_in(skip_permission=False):
             return -1
         tracker = yarppg.FpsTracker()
         start_time = time.time()
+        heart_rates = []
         # Run for five seconds
         while time.time() - start_time < 5:
             ret, frame = cam.read()
@@ -57,6 +111,7 @@ def check_in(skip_permission=False):
             img = cv2.flip(img, 1)
             tracker.tick()
             result.hr = 60 * tracker.fps / result.hr
+            heart_rates.append(result.hr)
             text = f"{result.hr:.1f} (bpm)"
             pos = (10, img.shape[0] - 10)
             cv2.putText(img, text, pos, cv2.FONT_HERSHEY_COMPLEX, 0.8, color=FONT_COLOR)
@@ -66,28 +121,42 @@ def check_in(skip_permission=False):
                 break
         cam.release()
         cv2.destroyAllWindows()
+
+        if heart_rates:
+            avg_heart_rate = sum(heart_rates) / len(heart_rates)
+            age_group = "athlete" if athlete_var.get() else "adult"
+            is_anomalous, message = is_heart_rate_anomalous(avg_heart_rate, age_group)
+            if is_anomalous:
+                exercise = random.choice(mindfulness_exercises)
+                message += f"\n\nSuggested Exercise: {exercise['name']}\n{exercise['description']}"
+                tk.messagebox.showwarning("High Stress Alert", message)
+            else:
+                tk.messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!")
         return 0
 
 def save_settings():
-    global disable_var, interval_var
+    global disable_var, interval_var, athlete_var
     settings = {
         "disable_app": disable_var.get(),
-        "check_in_interval": interval_var.get()
+        "check_in_interval": interval_var.get(),
+        "is_athlete": athlete_var.get()
     }
     with open("settings.json", "w") as f:
         json.dump(settings, f)
 
 def load_settings():
-    global disable_var, interval_var
+    global disable_var, interval_var, athlete_var
     if os.path.exists("settings.json"):
         with open("settings.json", "r") as f:
             settings = json.load(f)
             disable_var.set(settings.get("disable_app", False))
             interval_var.set(settings.get("check_in_interval", 60))
+            athlete_var.set(settings.get("is_athlete", False))
     else:
         # Default settings
         disable_var.set(False)
         interval_var.set(60)
+        athlete_var.set(False)
         save_settings()
 
 def open_settings():
@@ -98,6 +167,7 @@ def open_settings():
     tk.Checkbutton(root, text="Disable Application", variable=disable_var).pack()
     tk.Label(root, text="Check-in Interval (minutes):").pack()
     tk.Entry(root, textvariable=interval_var).pack()
+    tk.Checkbutton(root, text="Are you an athlete?", variable=athlete_var).pack()
 
     tk.Button(root, text="Save", command=save_settings).pack()
 
