@@ -20,8 +20,24 @@ FONT_COLOR = (0, 0, 0)
 def _is_window_closed(name: str) -> bool:
     return cv2.getWindowProperty(name, cv2.WND_PROP_VISIBLE) < 1
 
-def check_in():
+def check_in(skip_permission=False):
+    """
+    Perform a mindfulness check-in using the webcam to measure heart rate.
+
+    Parameters:
+    skip_permission (bool): If True, skip the permission prompt for the check-in. Default is False.
+
+    Returns:
+    int: Returns -1 if the camera could not be openedor the user skipped check-in, otherwise 0.
+    """
     if not disable_var.get():
+        if not skip_permission:
+            root = tk.Tk()
+            root.withdraw()  # Hide the root window
+            if not tk.messagebox.askyesno("Mindfulness Check-In", "Are you ready for a brief mindfulness check-in?"):
+                return -1
+            root.destroy()
+
         cam = cv2.VideoCapture(0)
         if not cam.isOpened():
             print(f"Could not open camera")
@@ -48,6 +64,9 @@ def check_in():
             print(result.value, result.hr)
             if cv2.waitKey(1) == ord("q") or _is_window_closed("yarPPG"):
                 break
+        cam.release()
+        cv2.destroyAllWindows()
+        return 0
 
 def save_settings():
     global disable_var, interval_var
@@ -87,7 +106,7 @@ def open_settings():
 
 def after_click(icon, query):
     if str(query) == "Check In":
-        check_in()
+        check_in(True)
     elif str(query) == "Settings":
         open_settings()
     elif str(query) == "Exit":
