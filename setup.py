@@ -26,7 +26,7 @@ executables = [
 
 # Setup configuration
 setup(
-    name="MyPythonApp",
+    name="PulsePause",
     version="1.0",
     description="A mindfulness check-in application using computer vision to measure heart rate.",
     options={
