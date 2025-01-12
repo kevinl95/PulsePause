@@ -16,7 +16,7 @@ PulsePause is a Python-based desktop application designed to help users practice
 Ensure you have the following installed:
 
 1. **Python 3.12**
-   - [Download Python](https://www.python.org/downloads/)
+   - [Download Python 3.12](https://www.python.org/downloads/release/python-3127/)
    
 2. **Poetry**
    - Poetry is a dependency management and packaging tool for Python.
