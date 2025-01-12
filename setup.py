@@ -33,6 +33,7 @@ setup(
         "build_exe": {
             "packages": list(dependencies.keys()),
             "include_files": [assets_dir],
+            "include_msvcr": True
         }
     },
     executables=executables
