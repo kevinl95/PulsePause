@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pulsepause"
 version = "1.0"
-description = ""
+description = "A mindfulness check-in application using computer vision to measure heart rate."
 authors = ["kloeffler95 <kevin.loeffler@colorado.edu>"]
 license = "MIT"
 readme = "README.md"
@@ -12,6 +12,7 @@ yarppg = {git = "https://github.com/SamProell/yarppg.git"}
 pystray = "^0.19.5"
 pillow = "^11.1.0"
 cx-freeze = "^7.2.8"
+toml = "^0.10.2"
 
 
 [build-system]
