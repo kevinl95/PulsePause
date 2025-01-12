@@ -1,13 +1,17 @@
 [tool.poetry]
 name = "pulsepause"
 version = "1.0"
-description = "A desktop app for periodic stress and mindfulness check-ins leveraging computer vision to measure your heart rate wherever you are."
+description = ""
 authors = ["kloeffler95 <kevin.loeffler@colorado.edu>"]
-license = "GPL 3.0"
+license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.13"
+python = "^3.11"
+yarppg = {git = "https://github.com/SamProell/yarppg.git"}
+pystray = "^0.19.5"
+pillow = "^11.1.0"
+cx-freeze = "^7.2.8"
 
 
 [build-system]
