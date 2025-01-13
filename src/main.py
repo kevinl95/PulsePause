@@ -172,16 +172,16 @@ def open_settings():
     root.iconbitmap(os.path.join("assets", "PulsePause.ico"))
     root.title("Settings")
 
+    # Populate the inputs with the initial values
+    disable_var.set(disable_var.get())
+    interval_var.set(str(interval_var.get()))
+    athlete_var.set(athlete_var.get())
+
     tk.Checkbutton(root, text="Disable Application", variable=disable_var).pack()
     tk.Label(root, text="Check-in Interval (minutes):").pack()
     tk.Entry(root, textvariable=interval_var).pack()
     interval_var.set(interval_var.get())  # Ensure the entry widget is populated with the value
     tk.Checkbutton(root, text="Are you an athlete?", variable=athlete_var).pack()
-
-    # Populate the inputs with the initial values
-    disable_var.set(disable_var.get())
-    interval_var.set(str(interval_var.get()))
-    athlete_var.set(athlete_var.get())
 
     tk.Button(root, text="Save", command=lambda: save_settings(root)).pack()
 
