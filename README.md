@@ -83,6 +83,11 @@ PulsePause uses `cx_Freeze` to build standalone executables for distribution.
 We welcome contributions! Please fork the repository, create a new branch for your feature or bugfix, and submit a pull request.
 
 ---
+## Disclaimer
+
+PulsePause is not a medical device. The heart rate information provided by this application is approximate and intended for general wellness purposes only. It is not designed to diagnose, treat, cure, or prevent any medical condition. If you have health concerns or require accurate heart rate measurements, please consult a qualified healthcare professional.
+
+---
 
 ## License
 This project is licensed under the MIT License. See the `LICENSE` file for details.
