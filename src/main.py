@@ -11,7 +11,7 @@ import sys
 from PIL import Image
 from tkinter import Toplevel, Label, Button, Entry, Checkbutton
 
-icon_path = os.path.join(os.path.dirname(__file__), "assets", "PulsePause.ico")
+icon_path = os.path.join("assets", "PulsePause.ico")
 logo = Image.open(icon_path)
 
 rppg = yarppg.Rppg()
