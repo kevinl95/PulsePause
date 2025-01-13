@@ -50,9 +50,6 @@ mindfulness_exercises = [
 
 
 def custom_messagebox(title, message):
-    root = tk.Tk()
-    root.withdraw()  # Hide the root window
-
     msg_box = Toplevel(root)
     msg_box.title(title)
     msg_box.iconbitmap(icon_path)
@@ -60,7 +57,8 @@ def custom_messagebox(title, message):
     Label(msg_box, text=message).pack(pady=10)
     Button(msg_box, text="OK", command=msg_box.destroy).pack(pady=5)
 
-    msg_box.mainloop()
+    msg_box.grab_set()
+    root.wait_window(msg_box)
 
 def custom_askyesno(title, message):
     root = tk.Tk()
@@ -171,7 +169,6 @@ def check_in(skip_permission=False):
                 cv2.cvtColor(img, cv2.COLOR_RGB2BGR),
             )
             cv2.waitKey(1)
-            print(result.value, result.hr)
         cam.release()
         cv2.destroyAllWindows()
 
