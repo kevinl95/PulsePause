@@ -164,6 +164,18 @@ def check_in(skip_permission=False):
             else:
                 text = "Analyzing..."
             pos = (10, img.shape[0] - 10)
+            (text_width, text_height), _ = cv2.getTextSize(
+                text, cv2.FONT_HERSHEY_COMPLEX, 0.8, 1
+            )
+            background_top_left = (pos[0] - 5, pos[1] - text_height - 5)
+            background_bottom_right = (pos[0] + text_width + 5, pos[1] + 5)
+            cv2.rectangle(
+                img,
+                background_top_left,
+                background_bottom_right,
+                (255, 255, 255),
+                cv2.FILLED,
+            )
             cv2.putText(img, text, pos, cv2.FONT_HERSHEY_COMPLEX, 0.8, color=FONT_COLOR)
             cv2.imshow(
                 "Checking stress level, please wait...",
