@@ -221,7 +221,7 @@ def open_settings():
     root = tk.Tk()
     root.iconbitmap(os.path.join("assets", "PulsePause.ico"))
     root.title("Settings")
-    root.geometry("400x300")  # Set the size of the settings window
+    root.geometry("300x200")  # Set the size of the settings window
     load_settings()
     checkbox = Checkbutton(root, text="Disable Application", variable=disable_var, command=lambda: disable_var.set(disable_var.get()))
     checkbox.pack(pady=10)
