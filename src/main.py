@@ -61,6 +61,7 @@ def custom_messagebox(title, message):
     Button(msg_box, text="OK", command=msg_box.destroy).pack(pady=5)
 
     msg_box.mainloop()
+    root.destroy()
 
 
 def custom_askyesno(title, message):
@@ -88,7 +89,7 @@ def custom_askyesno(title, message):
     Button(msg_box, text="No", command=on_no).pack(side="right", padx=10, pady=5)
 
     msg_box.mainloop()
-    print(result)
+    root.destroy()
     return result
 
 
