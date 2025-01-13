@@ -105,8 +105,7 @@ def check_in(skip_permission=False):
         tracker = yarppg.FpsTracker()
         start_time = time.time()
         heart_rates = []
-        # Run for around 30 seconds
-        while time.time() - start_time < 30:
+        while time.time() - start_time < 1000:
             ret, frame = cam.read()
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             if not ret:
