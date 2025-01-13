@@ -218,21 +218,27 @@ def load_settings():
 
 def open_settings():
     global disable_var, interval_var, athlete_var
-    root = tk.Tk()
-    root.iconbitmap(os.path.join("assets", "PulsePause.ico"))
-    root.title("Settings")
-    root.geometry("300x200")  # Set the size of the settings window
+    settings_window = Toplevel(root)
+    settings_window.iconbitmap(os.path.join("assets", "PulsePause.ico"))
+    settings_window.title("Settings")
+    settings_window.geometry("300x200")  # Set the size of the settings window
     load_settings()
-    checkbox = Checkbutton(root, text="Disable Application", variable=disable_var, command=lambda: disable_var.set(disable_var.get()))
+    
+    checkbox = Checkbutton(settings_window, text="Disable Application", variable=disable_var)
     checkbox.pack(pady=10)
-    Label(root, text="Check-in Interval (minutes):").pack(pady=5)
-    interval_entry = Entry(root, textvariable=interval_var)
+    
+    Label(settings_window, text="Check-in Interval (minutes):").pack(pady=5)
+    interval_entry = Entry(settings_window, textvariable=interval_var)
     interval_entry.pack(pady=5)
-    interval_var.trace_add("write", lambda *args: interval_var.set(interval_entry.get()))
-    athlete_box = Checkbutton(root, text="Are you an athlete?", variable=athlete_var)
+    
+    athlete_box = Checkbutton(settings_window, text="Are you an athlete?", variable=athlete_var)
     athlete_box.pack(pady=10)
-    athlete_box = Checkbutton(root, text="Are you an athlete?", variable=athlete_var, command=lambda: athlete_var.set(athlete_var.get()))
-    root.mainloop()
+    
+    save_button = Button(settings_window, text="Save", command=save_settings)
+    save_button.pack(pady=10)
+    
+    settings_window.grab_set()
+    root.wait_window(settings_window)
 
 
 def after_click(icon, query):
