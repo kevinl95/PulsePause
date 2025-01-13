@@ -5,7 +5,7 @@ import pathlib
 import toml
 
 # Get the dependencies from pyproject.toml
-pyproject_path = pathlib.Path(__file__).parent / 'pyproject.toml'
+pyproject_path = os.path.join(pathlib.Path(__file__).parent, 'pyproject.toml')
 pyproject = toml.load(pyproject_path)
 
 dependencies = pyproject['tool']['poetry']['dependencies']
