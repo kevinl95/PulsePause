@@ -79,8 +79,6 @@ def _is_window_closed(name: str) -> bool:
     return cv2.getWindowProperty(name, cv2.WND_PROP_VISIBLE) < 1
 
 def check_in(skip_permission=False):
-
-
     """
     Perform a mindfulness check-in using the webcam to measure heart rate.
 
@@ -122,6 +120,7 @@ def check_in(skip_permission=False):
             pos = (10, img.shape[0] - 10)
             cv2.putText(img, text, pos, cv2.FONT_HERSHEY_COMPLEX, 0.8, color=FONT_COLOR)
             cv2.imshow("Checking stress level, please wait...", cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
+            cv2.waitKey(1)
             print(result.value, result.hr)
         cam.release()
         cv2.destroyAllWindows()
@@ -193,8 +192,7 @@ def after_click(icon, query):
         open_settings()
     elif str(query) == "Exit":
         icon.stop()
-        # Save settings before exiting
-        save_settings()
+        cv2.destroyAllWindows()
         sys.exit()
 
 def schedule_check_in():
