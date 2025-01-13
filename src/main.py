@@ -88,6 +88,7 @@ def custom_askyesno(title, message):
     Button(msg_box, text="No", command=on_no).pack(side="right", padx=10, pady=5)
 
     msg_box.mainloop()
+    print(result)
     return result
 
 
