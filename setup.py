@@ -1,15 +1,6 @@
 from cx_Freeze import setup, Executable
 import os
 import sys
-import pathlib
-import toml
-
-# Get the dependencies from pyproject.toml
-pyproject_path = os.path.join(pathlib.Path(__file__).parent, 'pyproject.toml')
-pyproject = toml.load(pyproject_path)
-
-dependencies = pyproject['tool']['poetry']['dependencies']
-build_extras = pyproject['tool']['poetry'].get('extras', {})
 
 # Include the assets directory
 assets_dir = os.path.join("assets")
@@ -31,7 +22,7 @@ setup(
     description="A mindfulness check-in application using computer vision to measure heart rate.",
     options={
         "build_exe": {
-            "packages": list(dependencies.keys()),
+            "packages": ["pystray", "cv2", "numpy", "scipy", "matplotlib", "PIL", "tkinter"],
             "include_files": [assets_dir],
             "include_msvcr": True
         }
