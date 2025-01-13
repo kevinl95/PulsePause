@@ -61,23 +61,19 @@ def custom_messagebox(title, message):
     Button(msg_box, text="OK", command=msg_box.destroy).pack(pady=5)
 
     msg_box.mainloop()
-    root.destroy()
-
 
 def custom_askyesno(title, message):
     root = tk.Tk()
     root.withdraw()  # Hide the root window
 
-    result = False
+    result = [False]
 
     def on_yes():
-        nonlocal result
-        result = True
+        result[0] = True
         msg_box.destroy()
 
     def on_no():
-        nonlocal result
-        result = False
+        result[0] = False
         msg_box.destroy()
 
     msg_box = Toplevel(root)
@@ -88,9 +84,10 @@ def custom_askyesno(title, message):
     Button(msg_box, text="Yes", command=on_yes).pack(side="left", padx=10, pady=5)
     Button(msg_box, text="No", command=on_no).pack(side="right", padx=10, pady=5)
 
-    msg_box.mainloop()
+    msg_box.grab_set()
+    root.wait_window(msg_box)
     root.destroy()
-    return result
+    return result[0]
 
 
 def is_heart_rate_anomalous(heart_rate, age_group="adult"):
