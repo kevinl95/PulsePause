@@ -7,10 +7,11 @@ import cv2
 import time
 import random
 import threading
+import sys
 from PIL import Image
 from tkinter import messagebox
 
-logo = Image.open(os.path.join("assets", "PulsePause.png"))
+logo = Image.open(os.path.join("assets", "PulsePauseIcon.png"))
 
 rppg = yarppg.Rppg()
 
@@ -104,8 +105,8 @@ def check_in(skip_permission=False):
         tracker = yarppg.FpsTracker()
         start_time = time.time()
         heart_rates = []
-        # Run for five seconds
-        while time.time() - start_time < 5:
+        # Run for around 30 seconds
+        while time.time() - start_time < 30:
             ret, frame = cam.read()
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             if not ret:
@@ -140,7 +141,7 @@ def check_in(skip_permission=False):
                 messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!")
         return 0
 
-def save_settings():
+def save_settings(root=None):
     global disable_var, interval_var, athlete_var
     settings = {
         "disable_app": disable_var.get(),
@@ -149,6 +150,8 @@ def save_settings():
     }
     with open("settings.json", "w") as f:
         json.dump(settings, f)
+    if root:
+        root.quit()  # Exit the settings window after saving
 
 def load_settings():
     global disable_var, interval_var, athlete_var
@@ -173,9 +176,15 @@ def open_settings():
     tk.Checkbutton(root, text="Disable Application", variable=disable_var).pack()
     tk.Label(root, text="Check-in Interval (minutes):").pack()
     tk.Entry(root, textvariable=interval_var).pack()
+    interval_var.set(interval_var.get())  # Ensure the entry widget is populated with the value
     tk.Checkbutton(root, text="Are you an athlete?", variable=athlete_var).pack()
 
-    tk.Button(root, text="Save", command=save_settings).pack()
+    # Populate the inputs with the initial values
+    disable_var.set(disable_var.get())
+    interval_var.set(str(interval_var.get()))
+    athlete_var.set(athlete_var.get())
+
+    tk.Button(root, text="Save", command=lambda: save_settings(root)).pack()
 
     load_settings()
     root.mainloop()
@@ -189,6 +198,7 @@ def after_click(icon, query):
         icon.stop()
         # Save settings before exiting
         save_settings()
+        sys.exit()
 
 def schedule_check_in():
     interval = interval_var.get() * 60  # Convert minutes to seconds
