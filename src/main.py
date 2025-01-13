@@ -105,7 +105,7 @@ def check_in(skip_permission=False):
         tracker = yarppg.FpsTracker()
         start_time = time.time()
         heart_rates = []
-        while time.time() - start_time < 1000:
+        while time.time() - start_time < 20:
             ret, frame = cam.read()
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             if not ret:
@@ -123,8 +123,6 @@ def check_in(skip_permission=False):
             cv2.putText(img, text, pos, cv2.FONT_HERSHEY_COMPLEX, 0.8, color=FONT_COLOR)
             cv2.imshow("Checking stress level, please wait...", cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
             print(result.value, result.hr)
-            if cv2.waitKey(1) == ord("q") or _is_window_closed("yarPPG"):
-                break
         cam.release()
         cv2.destroyAllWindows()
 
@@ -140,7 +138,7 @@ def check_in(skip_permission=False):
                 messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!")
         return 0
 
-def save_settings(root=None):
+def save_settings():
     global disable_var, interval_var, athlete_var
     settings = {
         "disable_app": disable_var.get(),
@@ -149,8 +147,7 @@ def save_settings(root=None):
     }
     with open("settings.json", "w") as f:
         json.dump(settings, f)
-    if root:
-        root.quit()  # Exit the settings window after saving
+    messagebox.showinfo("PulsePause", "Your settings have been saved.")
 
 def load_settings():
     global disable_var, interval_var, athlete_var
@@ -184,7 +181,7 @@ def open_settings():
     if athlete_var.get():
         athlete_box.select()
     athlete_box.pack()
-    tk.Button(root, text="Save", command=lambda: save_settings(root)).pack()
+    tk.Button(root, text="Save", command=save_settings).pack()
 
     load_settings()
     root.mainloop()
