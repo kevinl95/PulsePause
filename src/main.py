@@ -13,9 +13,12 @@ logo = Image.open(os.path.join("assets", "PulsePause.png"))
 
 rppg = yarppg.Rppg()
 
-disable_var = tk.BooleanVar()
-interval_var = tk.IntVar()
-athlete_var = tk.BooleanVar()
+root = tk.Tk()
+root.withdraw()  # Hide the root window
+
+disable_var = tk.BooleanVar(root)
+interval_var = tk.IntVar(root)
+athlete_var = tk.BooleanVar(root)
 
 FONT_COLOR = (0, 0, 0)
 
@@ -74,6 +77,8 @@ def _is_window_closed(name: str) -> bool:
     return cv2.getWindowProperty(name, cv2.WND_PROP_VISIBLE) < 1
 
 def check_in(skip_permission=False):
+
+
     """
     Perform a mindfulness check-in using the webcam to measure heart rate.
 
