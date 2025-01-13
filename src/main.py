@@ -60,6 +60,7 @@ def custom_messagebox(title, message):
     msg_box.grab_set()
     root.wait_window(msg_box)
 
+
 def custom_askyesno(title, message):
     root = tk.Tk()
     root.withdraw()  # Hide the root window
@@ -134,7 +135,7 @@ def check_in(skip_permission=False):
             root = tk.Tk()
             root.withdraw()  # Hide the root window
             if not custom_askyesno(
-                "Mindfulness Check-In",
+                "Stress Check-In",
                 "Are you ready for a brief mindfulness check-in?",
             ):
                 return -1
@@ -223,20 +224,24 @@ def open_settings():
     settings_window.title("Settings")
     settings_window.geometry("300x200")  # Set the size of the settings window
     load_settings()
-    
-    checkbox = Checkbutton(settings_window, text="Disable Application", variable=disable_var)
+
+    checkbox = Checkbutton(
+        settings_window, text="Disable Application", variable=disable_var
+    )
     checkbox.pack(pady=10)
-    
+
     Label(settings_window, text="Check-in Interval (minutes):").pack(pady=5)
     interval_entry = Entry(settings_window, textvariable=interval_var)
     interval_entry.pack(pady=5)
-    
-    athlete_box = Checkbutton(settings_window, text="Are you an athlete?", variable=athlete_var)
+
+    athlete_box = Checkbutton(
+        settings_window, text="Are you an athlete?", variable=athlete_var
+    )
     athlete_box.pack(pady=10)
-    
+
     save_button = Button(settings_window, text="Save", command=save_settings)
     save_button.pack(pady=10)
-    
+
     settings_window.grab_set()
     root.wait_window(settings_window)
 
