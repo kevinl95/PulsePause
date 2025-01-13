@@ -221,19 +221,17 @@ def open_settings():
     root = tk.Tk()
     root.iconbitmap(os.path.join("assets", "PulsePause.ico"))
     root.title("Settings")
+    root.geometry("400x300")  # Set the size of the settings window
     load_settings()
-    checkbox = Checkbutton(root, text="Disable Application", variable=disable_var)
-    checkbox.pack()
-    Label(root, text="Check-in Interval (minutes):").pack()
+    checkbox = Checkbutton(root, text="Disable Application", variable=disable_var, command=lambda: disable_var.set(disable_var.get()))
+    checkbox.pack(pady=10)
+    Label(root, text="Check-in Interval (minutes):").pack(pady=5)
     interval_entry = Entry(root, textvariable=interval_var)
-    interval_entry.pack()
-    interval_entry.bind(
-        "<KeyRelease>", lambda event: interval_var.set(interval_entry.get())
-    )
-    interval_entry.pack()
+    interval_entry.pack(pady=5)
+    interval_var.trace_add("write", lambda *args: interval_var.set(interval_entry.get()))
     athlete_box = Checkbutton(root, text="Are you an athlete?", variable=athlete_var)
-    athlete_box.pack()
-    Button(root, text="Save", command=save_settings).pack()
+    athlete_box.pack(pady=10)
+    athlete_box = Checkbutton(root, text="Are you an athlete?", variable=athlete_var, command=lambda: athlete_var.set(athlete_var.get()))
     root.mainloop()
 
 
