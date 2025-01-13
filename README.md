@@ -64,14 +64,6 @@ Ensure you have the following installed:
 
 ---
 
-## Downloading Executables
-
-For your convenience, pre-built executables for Windows are available on the [GitHub Releases page](https://github.com/kevinl95/PulsePause/releases). These executables require no additional installation steps.
-
-### Note for First-Time Users
-
-On the first run, it is normal for PulsePause to take several moments to set itself up before launching. Please be patient as it completes its initialization process.
-
 ## Building Executables
 PulsePause uses `cx_Freeze` to build standalone executables for distribution.
 
