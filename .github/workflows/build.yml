@@ -1,0 +1,37 @@
+name: Build EXE
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'  # Specify your Python version
+
+    - name: Install Poetry
+      run: python -m pip install poetry
+
+    - name: Install dependencies
+      run: poetry install --with dev
+
+    - name: Build executable
+      run: poetry run python setup.py build
+
+    - name: Archive build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: build/exe.win-amd64-3.12
