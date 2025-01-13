@@ -9,9 +9,10 @@ import random
 import threading
 import sys
 from PIL import Image
-from tkinter import messagebox
+from tkinter import Toplevel, Label, Button, Entry, Checkbutton
 
-logo = Image.open(os.path.join("assets", "PulsePauseIcon.png"))
+icon_path = os.path.join(os.path.dirname(__file__), "assets", "PulsePause.ico")
+logo = Image.open(icon_path)
 
 rppg = yarppg.Rppg()
 
@@ -46,6 +47,44 @@ mindfulness_exercises = [
         "description": "Choose an object nearby and focus on it for 1 minute. Observe its color, texture, shape, and any small details you’ve never noticed before."
     }
 ]
+
+def custom_messagebox(title, message):
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+
+    msg_box = Toplevel(root)
+    msg_box.title(title)
+    msg_box.iconbitmap(icon_path)
+
+    Label(msg_box, text=message).pack(pady=10)
+    Button(msg_box, text="OK", command=msg_box.destroy).pack(pady=5)
+
+    msg_box.mainloop()
+
+def custom_askyesno(title, message):
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+
+    result = [False]  # Use a list to capture the result
+
+    def on_yes():
+        result[0] = True
+        msg_box.destroy()
+
+    def on_no():
+        result[0] = False
+        msg_box.destroy()
+
+    msg_box = Toplevel(root)
+    msg_box.title(title)
+    msg_box.iconbitmap(icon_path)
+
+    Label(msg_box, text=message).pack(pady=10)
+    Button(msg_box, text="Yes", command=on_yes).pack(side="left", padx=10, pady=5)
+    Button(msg_box, text="No", command=on_no).pack(side="right", padx=10, pady=5)
+
+    msg_box.mainloop()
+    return result[0]
 
 def is_heart_rate_anomalous(heart_rate, age_group="adult"):
     """
@@ -88,7 +127,7 @@ def check_in(skip_permission=False):
         if not skip_permission:
             root = tk.Tk()
             root.withdraw()  # Hide the root window
-            if not messagebox.askyesno("Mindfulness Check-In", "Are you ready for a brief mindfulness check-in?", icon='question'):
+            if not custom_askyesno("Mindfulness Check-In", "Are you ready for a brief mindfulness check-in?"):
                 return -1
             root.destroy()
 
@@ -131,9 +170,9 @@ def check_in(skip_permission=False):
             if is_anomalous:
                 exercise = random.choice(mindfulness_exercises)
                 message += f"\n\nSuggested Exercise: {exercise['name']}\n{exercise['description']}"
-                messagebox.showwarning("High Stress Alert", message, icon="warning")
+                custom_messagebox("High Stress Alert", message)
             else:
-                messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!", icon="info")
+                custom_messagebox("Stress Check-In", "Your heart rate is normal. Keep up the good work!")
         return 0
 
 def save_settings():
@@ -145,7 +184,7 @@ def save_settings():
     }
     with open("settings.json", "w") as f:
         json.dump(settings, f)
-    messagebox.showinfo("PulsePause", "Your settings have been saved.", icon="info")
+    custom_messagebox("PulsePause", "Your settings have been saved.")
 
 def load_settings():
     global disable_var, interval_var, athlete_var
@@ -168,19 +207,16 @@ def open_settings():
     root.iconbitmap(os.path.join("assets", "PulsePause.ico"))
     root.title("Settings")
     load_settings()
-    checkbox = tk.Checkbutton(root, text="Disable Application", variable=disable_var)
-    if disable_var.get():
-        checkbox.select()
+    checkbox = Checkbutton(root, text="Disable Application", variable=disable_var)
     checkbox.pack()
-    tk.Label(root, text="Check-in Interval (minutes):").pack()
-    interval_entry = tk.Entry(root, textvariable=interval_var)
-    interval_entry.insert(0, str(interval_var.get()))
+    Label(root, text="Check-in Interval (minutes):").pack()
+    interval_entry = Entry(root, textvariable=interval_var)
     interval_entry.pack()
-    athlete_box = tk.Checkbutton(root, text="Are you an athlete?", variable=athlete_var)
-    if athlete_var.get():
-        athlete_box.select()
+    interval_entry.bind("<KeyRelease>", lambda event: interval_var.set(interval_entry.get()))
+    interval_entry.pack()
+    athlete_box = Checkbutton(root, text="Are you an athlete?", variable=athlete_var)
     athlete_box.pack()
-    tk.Button(root, text="Save", command=save_settings).pack()
+    Button(root, text="Save", command=save_settings).pack()
     root.mainloop()
 
 def after_click(icon, query):
