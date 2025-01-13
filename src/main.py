@@ -74,10 +74,6 @@ def is_heart_rate_anomalous(heart_rate, age_group="adult"):
     else:
         return False, f"Heart rate is normal: {heart_rate} BPM (Threshold: {threshold} BPM)."
 
-
-def _is_window_closed(name: str) -> bool:
-    return cv2.getWindowProperty(name, cv2.WND_PROP_VISIBLE) < 1
-
 def check_in(skip_permission=False):
     """
     Perform a mindfulness check-in using the webcam to measure heart rate.
@@ -167,10 +163,11 @@ def load_settings():
         save_settings()
 
 def open_settings():
+    global disable_var, interval_var, athlete_var
     root = tk.Tk()
     root.iconbitmap(os.path.join("assets", "PulsePause.ico"))
     root.title("Settings")
-
+    load_settings()
     checkbox = tk.Checkbutton(root, text="Disable Application", variable=disable_var)
     if disable_var.get():
         checkbox.select()
@@ -184,8 +181,6 @@ def open_settings():
         athlete_box.select()
     athlete_box.pack()
     tk.Button(root, text="Save", command=save_settings).pack()
-
-    load_settings()
     root.mainloop()
 
 def after_click(icon, query):
