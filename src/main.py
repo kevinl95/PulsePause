@@ -92,7 +92,7 @@ def check_in(skip_permission=False):
         if not skip_permission:
             root = tk.Tk()
             root.withdraw()  # Hide the root window
-            if not messagebox.askyesno("Mindfulness Check-In", "Are you ready for a brief mindfulness check-in?"):
+            if not messagebox.askyesno("Mindfulness Check-In", "Are you ready for a brief mindfulness check-in?", icon='question'):
                 return -1
             root.destroy()
 
@@ -135,9 +135,9 @@ def check_in(skip_permission=False):
             if is_anomalous:
                 exercise = random.choice(mindfulness_exercises)
                 message += f"\n\nSuggested Exercise: {exercise['name']}\n{exercise['description']}"
-                messagebox.showwarning("High Stress Alert", message)
+                messagebox.showwarning("High Stress Alert", message, icon="warning")
             else:
-                messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!")
+                messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!", icon="info")
         return 0
 
 def save_settings():
@@ -149,7 +149,7 @@ def save_settings():
     }
     with open("settings.json", "w") as f:
         json.dump(settings, f)
-    messagebox.showinfo("PulsePause", "Your settings have been saved.")
+    messagebox.showinfo("PulsePause", "Your settings have been saved.", icon="info")
 
 def load_settings():
     global disable_var, interval_var, athlete_var
