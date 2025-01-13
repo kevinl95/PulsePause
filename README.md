@@ -1,7 +1,7 @@
 # PulsePause - Mindfulness Check-in From your System Tray
 ![A heart made out of a fast fourier transform is displayed above the text Pulse Pause - Mindfulness App.](assets/PulsePause.png)
 
-PulsePause is a Python-based desktop application designed to help users practice mindfulness by periodically measuring heart rate using computer vision and providing alerts when stress levels appear elevated. It accomplishes this using remote photoplethysmography (rPPG). Once an hour (or however often the user chooses!) users will be prompted for a check-in. The web cam will be opened and a five second video captured. Using rPPG the users heart rate is collected and if the user is stressed they are prompted to take a break and are given one of a set of mindfulness exercises to practice.
+PulsePause is a Python-based desktop application designed to help users practice mindfulness by periodically measuring heart rate using computer vision and providing alerts when stress levels appear elevated. It accomplishes this using [remote photoplethysmography (rPPG)](https://pmc.ncbi.nlm.nih.gov/articles/PMC9267568/). Once an hour (or however often the user chooses!) users will be prompted for a check-in. The web cam will be opened and a five second video captured. Using rPPG the users heart rate is collected and if the user is stressed they are prompted to take a break and are given one of a set of mindfulness exercises to practice.
 
 ---
 
