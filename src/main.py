@@ -116,7 +116,10 @@ def check_in(skip_permission=False):
             tracker.tick()
             result.hr = 60 * tracker.fps / result.hr
             heart_rates.append(result.hr)
-            text = f"{result.hr:.1f} (bpm)"
+            if result.hr > 0:
+                text = f"{result.hr:.1f} (bpm)"
+            else:
+                text = "Analyzing..."
             pos = (10, img.shape[0] - 10)
             cv2.putText(img, text, pos, cv2.FONT_HERSHEY_COMPLEX, 0.8, color=FONT_COLOR)
             cv2.imshow("Checking stress level, please wait...", cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
