@@ -8,6 +8,7 @@ import time
 import random
 import threading
 from PIL import Image
+from tkinter import messagebox
 
 logo = Image.open(os.path.join("assets", "PulsePause.png"))
 
@@ -92,7 +93,7 @@ def check_in(skip_permission=False):
         if not skip_permission:
             root = tk.Tk()
             root.withdraw()  # Hide the root window
-            if not tk.messagebox.askyesno("Mindfulness Check-In", "Are you ready for a brief mindfulness check-in?"):
+            if not messagebox.askyesno("Mindfulness Check-In", "Are you ready for a brief mindfulness check-in?"):
                 return -1
             root.destroy()
 
@@ -134,9 +135,9 @@ def check_in(skip_permission=False):
             if is_anomalous:
                 exercise = random.choice(mindfulness_exercises)
                 message += f"\n\nSuggested Exercise: {exercise['name']}\n{exercise['description']}"
-                tk.messagebox.showwarning("High Stress Alert", message)
+                messagebox.showwarning("High Stress Alert", message)
             else:
-                tk.messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!")
+                messagebox.showinfo("Stress Check-In", "Your heart rate is normal. Keep up the good work!")
         return 0
 
 def save_settings():
