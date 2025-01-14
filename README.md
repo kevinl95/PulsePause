@@ -7,10 +7,25 @@ PulsePause is a Python-based desktop application designed to help users practice
 
 ---
 
+![Someone is looking at the camera while overlayed in black text on top of the video output is the text 58.1 bpm](screenshots/stresslevel.PNG)
+
 ## Features
 - Measure heart rate using computer vision and your webcam.
 - Identify anomalously high heart rates as a potential indicator of stress.
 - Provide mindfulness exercises to promote relaxation.
+- Unobtrusively runs from the system tray
+
+![A menu with the options Check In, Settings, and Exit are overlayed over an icon with a heart and the text "PP" in a Windows system tray](screenshots/tray.png)
+
+## Settings
+
+![A menu with the options Disable Application, Check-in Interval (Minutes), and "Are you an Athlete" is shown in a window](screenshots/settings.PNG)
+
+Settings can be accessed by clicking the Pulse Pause icon in the system tray.
+
+- Disable Application lets you disable check-ins. This is good if you wish to be disturbed for a while.
+- Check-in Interval lets you choose how often PulsePause prompts you for a check in. You can always click "No" when asked if you do not have time for a check-in. Check-ins can be triggered manually from the system tray whenver you wish
+- "Are you an Athlete?" lowers the stress threshold level since your heart rate will be lower.
 
 ---
 
