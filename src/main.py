@@ -50,6 +50,16 @@ mindfulness_exercises = [
 
 
 def custom_messagebox(title, message):
+    """
+    Creates a custom message box with a given title and message.
+
+    Args:
+        title (str): The title of the message box window.
+        message (str): The message to be displayed in the message box.
+
+    The message box will have an "OK" button to close the window.
+    The window will be modal, meaning it will block interaction with other windows until it is closed.
+    """
     msg_box = Toplevel(root)
     msg_box.title(title)
     msg_box.iconbitmap(icon_path)
@@ -62,6 +72,16 @@ def custom_messagebox(title, message):
 
 
 def custom_askyesno(title, message):
+    """
+    Display a custom Yes/No dialog box with the given title and message.
+
+    Parameters:
+    title (str): The title of the dialog box.
+    message (str): The message to be displayed in the dialog box.
+
+    Returns:
+    bool: True if the user clicks 'Yes', False if the user clicks 'No'.
+    """
     root = tk.Tk()
     root.withdraw()  # Hide the root window
 
@@ -198,22 +218,67 @@ def check_in(skip_permission=False):
                     "Stress Check-In",
                     "Your heart rate is normal. Keep up the good work!",
                 )
+        schedule_check_in()  # Schedule the next check-in
         return 0
 
 
 def save_settings():
+    """
+    Save the current application settings to a JSON file and schedule a check-in if the interval has changed.
+
+    This function retrieves the current values of `disable_var`, `interval_var`, and `athlete_var` and saves them
+    to a file named "settings.json". If the check-in interval or disable state has changed, it schedules a new check-in. Finally,
+    it displays a message box to inform the user that the settings have been saved.
+
+    Globals:
+        disable_var (tkinter.Variable): A Tkinter variable indicating whether the application is disabled.
+        interval_var (tkinter.Variable): A Tkinter variable holding the check-in interval.
+        athlete_var (tkinter.Variable): A Tkinter variable indicating whether the user is an athlete.
+
+    Raises:
+        FileNotFoundError: If the "settings.json" file does not exist.
+        json.JSONDecodeError: If the "settings.json" file contains invalid JSON.
+    """
     global disable_var, interval_var, athlete_var
+    old_disable = None
+    old_interval = None
+    with open("settings.json", "r") as f:
+        settings = json.load(f)
+        old_disable = settings.get("disable_app", False)
+        old_interval = settings.get("check_in_interval", 60)
+    new_disable = disable_var.get()
+    new_interval = interval_var.get()
     settings = {
         "disable_app": disable_var.get(),
-        "check_in_interval": interval_var.get(),
+        "check_in_interval": new_interval,
         "is_athlete": athlete_var.get(),
     }
     with open("settings.json", "w") as f:
         json.dump(settings, f)
+    if old_interval != new_interval or old_disable != new_disable:
+        schedule_check_in()
     custom_messagebox("PulsePause", "Your settings have been saved.")
 
 
 def load_settings():
+    """
+    Load application settings from a JSON file and set global variables accordingly.
+
+    This function checks if a "settings.json" file exists in the current directory.
+    If the file exists, it reads the settings from the file and updates the global
+    variables `disable_var`, `interval_var`, and `athlete_var` with the values from
+    the file. If the file does not exist, it sets the global variables to default
+    values and calls `save_settings()` to create the file with these default values.
+
+    Global Variables:
+        disable_var (tk.BooleanVar): Indicates whether the application is disabled.
+        interval_var (tk.IntVar): The interval for checking in, in minutes.
+        athlete_var (tk.BooleanVar): Indicates whether the user is an athlete.
+
+    Raises:
+        FileNotFoundError: If the "settings.json" file does not exist and cannot be created.
+        json.JSONDecodeError: If the "settings.json" file contains invalid JSON.
+    """
     global disable_var, interval_var, athlete_var
     if os.path.exists("settings.json"):
         with open("settings.json", "r") as f:
@@ -230,6 +295,24 @@ def load_settings():
 
 
 def open_settings():
+    """
+    Opens the settings window for the application.
+
+    This function creates a new Toplevel window that allows the user to modify
+    application settings such as disabling the application, setting the check-in
+    interval, and indicating if the user is an athlete. The settings window includes
+    checkboxes and entry fields for these settings, and a save button to save the changes.
+    If the user is an athlete, the threshold for being stressed is lower than for non-athletes.
+
+    Global Variables:
+    - disable_var: Tkinter variable associated with the "Disable Application" checkbox.
+    - interval_var: Tkinter variable associated with the "Check-in Interval" entry field.
+    - athlete_var: Tkinter variable associated with the "Are you an athlete?" checkbox.
+
+    The function also sets the window icon, title, and size, and ensures that the settings
+    window is modal, meaning it must be closed before the user can interact with the main
+    application window again.
+    """
     global disable_var, interval_var, athlete_var
     settings_window = Toplevel(root)
     settings_window.iconbitmap(os.path.join("assets", "PulsePause.ico"))
@@ -259,6 +342,18 @@ def open_settings():
 
 
 def after_click(icon, query):
+    """
+    Handles actions based on the user's selection from a menu.
+
+    Parameters:
+    icon (Icon): The icon object representing the system tray icon.
+    query (str): The user's selection from the menu.
+
+    Actions:
+    - If the query is "Check In", it calls the check_in function with True as an argument.
+    - If the query is "Settings", it calls the open_settings function.
+    - If the query is "Exit", it stops the icon, destroys all OpenCV windows, and exits the program.
+    """
     if str(query) == "Check In":
         check_in(True)
     elif str(query) == "Settings":
@@ -270,6 +365,23 @@ def after_click(icon, query):
 
 
 def schedule_check_in():
+    """
+    Schedules a periodic check-in based on the interval set by the user.
+
+    This function retrieves the interval from `interval_var`, converts it from minutes to seconds,
+    and schedules the `check_in` function to be called after the specified interval. If the
+    `disable_var` is not set, it immediately calls the `check_in` function before scheduling the next check-in.
+
+    Note:
+        This function uses threading to schedule the check-ins.
+
+    Variables:
+        interval_var (tkinter.Variable): A Tkinter variable holding the interval in minutes.
+        disable_var (tkinter.Variable): A Tkinter variable indicating whether the check-in is disabled.
+
+    Returns:
+        None
+    """
     interval = interval_var.get() * 60  # Convert minutes to seconds
     if not disable_var.get():
         check_in()
