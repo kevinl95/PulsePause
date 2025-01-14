@@ -24,7 +24,8 @@ setup(
         "build_exe": {
             "packages": ["pystray", "cv2", "numpy", "scipy", "matplotlib", "PIL", "tkinter"],
             "include_files": [assets_dir],
-            "include_msvcr": True
+            "include_msvcr": True,
+            "optimize": 2
         }
     },
     executables=executables
