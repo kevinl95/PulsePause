@@ -222,18 +222,21 @@ def check_in(skip_permission=False):
         return 0
 
 
-def save_settings():
+def save_settings(show_message=True):
     """
-    Save the current application settings to a JSON file and schedule a check-in if the interval has changed.
+    Save the current application settings to a JSON file and schedule a check-in if the interval or disable state has changed.
 
     This function retrieves the current values of `disable_var`, `interval_var`, and `athlete_var` and saves them
-    to a file named "settings.json". If the check-in interval or disable state has changed, it schedules a new check-in. Finally,
-    it displays a message box to inform the user that the settings have been saved.
+    to a file named "settings.json". If the check-in interval or disable state has changed, it schedules a new check-in. 
+    Finally, it displays a message box to inform the user that the settings have been saved.
+
+    Parameters:
+        show_message (bool): If True, display a message box to inform the user that the settings have been saved. Default is True.
 
     Globals:
-        disable_var (tkinter.Variable): A Tkinter variable indicating whether the application is disabled.
-        interval_var (tkinter.Variable): A Tkinter variable holding the check-in interval.
-        athlete_var (tkinter.Variable): A Tkinter variable indicating whether the user is an athlete.
+        disable_var (tk.BooleanVar): A Tkinter variable indicating whether the application is disabled.
+        interval_var (tk.IntVar): A Tkinter variable holding the check-in interval in minutes.
+        athlete_var (tk.BooleanVar): A Tkinter variable indicating whether the user is an athlete.
 
     Raises:
         FileNotFoundError: If the "settings.json" file does not exist.
@@ -258,7 +261,8 @@ def save_settings():
         json.dump(settings, f)
     if old_interval != new_interval or old_disable != new_disable:
         schedule_check_in()
-    custom_messagebox("PulsePause", "Your settings have been saved.")
+    if show_message:
+        custom_messagebox("PulsePause", "Your settings have been saved.")
 
 
 def load_settings():
@@ -292,7 +296,7 @@ def load_settings():
         disable_var.set(False)
         interval_var.set(60)
         athlete_var.set(False)
-        save_settings()
+        save_settings(False)
 
 
 def open_settings():
