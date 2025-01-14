@@ -33,5 +33,5 @@ jobs:
     - name: Archive build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build
+        name: pulsepause_windows
         path: build/exe.win-amd64-3.12
