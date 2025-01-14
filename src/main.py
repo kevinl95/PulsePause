@@ -242,14 +242,15 @@ def save_settings():
     global disable_var, interval_var, athlete_var
     old_disable = None
     old_interval = None
-    with open("settings.json", "r") as f:
-        settings = json.load(f)
-        old_disable = settings.get("disable_app", False)
-        old_interval = settings.get("check_in_interval", 60)
+    if os.path.exists("settings.json"):
+        with open("settings.json", "r") as f:
+            settings = json.load(f)
+            old_disable = settings.get("disable_app", False)
+            old_interval = settings.get("check_in_interval", 60)
     new_disable = disable_var.get()
     new_interval = interval_var.get()
     settings = {
-        "disable_app": disable_var.get(),
+        "disable_app": new_disable,
         "check_in_interval": new_interval,
         "is_athlete": athlete_var.get(),
     }
@@ -369,9 +370,7 @@ def schedule_check_in():
     Schedules a periodic check-in based on the interval set by the user.
 
     This function retrieves the interval from `interval_var`, converts it from minutes to seconds,
-    and schedules the `check_in` function to be called after the specified interval. If the
-    `disable_var` is not set, it immediately calls the `check_in` function before scheduling the next check-in.
-
+    and schedules the `check_in` function to be called after the specified interval.
     Note:
         This function uses threading to schedule the check-ins.
 
@@ -382,10 +381,9 @@ def schedule_check_in():
     Returns:
         None
     """
-    interval = interval_var.get() * 60  # Convert minutes to seconds
     if not disable_var.get():
-        check_in()
-    threading.Timer(interval, schedule_check_in).start()
+        interval = interval_var.get() * 60  # Convert minutes to seconds
+        threading.Timer(interval, check_in).start()
 
 
 icon = pystray.Icon(

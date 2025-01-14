@@ -68,6 +68,8 @@ Ensure you have the following installed:
 
 For your convenience, pre-built executables for Windows are available on the [GitHub Releases page](https://github.com/kevinl95/PulsePause/releases). These executables require no additional installation steps.
 
+Unpack the PulsePause archive and run PulsePause.exe. You will be prompted for your initial mindfulness checkin after the program initializes.
+
 ### Note for First-Time Users
 
 On the first run, it is normal for PulsePause to take several moments to set itself up before launching. Please be patient as it completes its initialization process.
